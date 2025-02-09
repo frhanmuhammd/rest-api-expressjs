@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <form>
+        <div id="containerForm">
+          <div>
+            <label for="nama_lengkap">Nama Lengkap</label>
+            <input type="text" required placeholder="Masukkan Kelas" id="nama_lengkap" />
+          </div>
+          <div>
+            <label for="username">username</label>
+            <input type="text" required placeholder="Masukkan username" id="username" />
+          </div>
+          <div>
+            <label for="password">password</label>
+            <input type="password" required placeholder="Masukkan password" id="password" />
+          </div>
+          <div>
+            <label for="tanggal_lahir">tanggal lahir</label>
+            <input type="date" required placeholder="Masukkan tanggal_lahir" id="tanggal_lahir" />
+          </div>
+          <div>
+            <label for="status">Status</label>
+            <select id="status">
+              <option value="aktif">aktif</option>
+              <option value="tidak-aktif">tidak aktif</option>
+            </select>
+          </div>
+          <div>
+            <label for="kelas">Kelas</label>
+            <select id="kelas"></select>
+          </div>
+
+          <button type="submit">kirim</button>
+        </div>
+      </form>
+    </div>
+  </body>
+
+  <script>
+    const status = document.getElementById("status").value;
+    console.log(status);
+    const form = document.querySelector("form");
+
+    const fetchDataKelas = async () => {
+      try {
+        const kelasSelect = document.getElementById("kelas");
+        const result = await fetch("http://localhost:3000/api/kelas");
+        const data = await result.json();
+        const kelas = data.data;
+        console.log(kelas);
+
+        kelas.forEach((item) => {
+          kelasSelect.innerHTML += `
+              <option value="${item.id}">${item.nama_kelas} - ${item.semester}</option>
+        `;
+        });
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
+    fetchDataKelas();
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      try {
+        const nama_lengkap = document.getElementById("nama_lengkap").value;
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const tanggal_lahir = document.getElementById("tanggal_lahir").value;
+        const status = document.getElementById("status").value;
+        console.log(status);
+        const id_kelas = document.getElementById("kelas").value;
+        const result = await fetch("http://localhost:3000/api/profile-pengguna", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nama_lengkap,
+            username,
+            password,
+            tanggal_lahir,
+            status,
+            id_kelas,
+          }),
+        });
+        alert("Berhasil menambahkan data");
+        window.location.href = "/profile-pengguna";
+      } catch (error) {
+        console.log(error.message);
+      }
+    });
+  </script>
+</html>

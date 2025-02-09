@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form>
+      <label for="username">Username</label>
+      <input type="text" placeholder=" masukkan username" id="username" />
+      <label for="password">password</label>
+      <input type="password" placeholder=" masukkan password" id="password" />
+      <button type="submit">login</button>
+    </form>
+  </body>
+
+  <script>
+    const form = document.querySelector("form");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      try {
+        const result = await fetch("http://localhost:3000/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username,
+            password,
+          }),
+        });
+
+        if (!result.ok) {
+          throw new Error("Login gagal. Cek kembali username & password.");
+        }
+
+        alert("berhasil login");
+        window.location.href = "/kelas";
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+  </script>
+</html>

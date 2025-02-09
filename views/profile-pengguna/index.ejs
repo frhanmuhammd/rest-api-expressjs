@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <button onclick="window.location.href='/profile-pengguna/create'">create</button>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Nama Lengkap</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Tanggal Lahir</th>
+            <th>Status</th>
+            <th>Nama Kelas</th>
+            <th>Semester</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </body>
+  <script>
+    const tbody = document.querySelector("tbody");
+    const fetchData = async () => {
+      try {
+        const api = await fetch("http://localhost:3000/api/profile-pengguna", {
+          method: "GET",
+          credentials: "include",
+        });
+        const result = await api.json();
+        const data = result.data;
+
+        data.forEach((item) => {
+          tbody.innerHTML += `
+              <tr>
+                    <td>${item.nama_lengkap}</td>
+                    <td>${item.username}</td>
+                    <td>${item.password}</td>
+                    <td>${item.tanggal_lahir}</td>
+                    <td>${item.status}</td>
+                    <td>${item.kela.nama_kelas}</td>
+                    <td>${item.kela.semester}</td>
+                    <td>
+                        <button onclick=handleEdit(${item.id})>edit</button>
+                        <button onclick=handleDelete(${item.id})>delete</button>
+                    </td>
+                </tr>
+            `;
+        });
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    fetchData();
+
+    const handleDelete = async (id) => {
+      try {
+        const confirmMessage = confirm("Yakin ingin menghapus data?");
+
+        if (confirmMessage) {
+          const result = await fetch(`http://localhost:3000/api/profile-pengguna/${id}`, {
+            method: "DELETE",
+          });
+
+          window.location.reload();
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    const handleEdit = (id) => {
+      window.location.href = `/profile-pengguna/edit?id=${id}`;
+    };
+  </script>
+</html>

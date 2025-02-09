@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <form>
+        <div id="containerForm">
+          <div>
+            <label for="nama_kelas">Nama Kelas</label>
+            <input type="text" required placeholder="Masukkan Kelas" id="nama_kelas" />
+          </div>
+          <div>
+            <label for="semester">Semester</label>
+            <input type="text" required placeholder="Masukkan Semester" id="semester" />
+          </div>
+          <button type="submit">kirim</button>
+        </div>
+      </form>
+    </div>
+  </body>
+
+  <script>
+    const form = document.querySelector("form");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      try {
+        const nama_kelas = document.getElementById("nama_kelas").value;
+        const semester = document.getElementById("semester").value;
+        const result = await fetch("http://localhost:3000/api/kelas", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nama_kelas,
+            semester,
+          }),
+        });
+        alert("Berhasil menambahkan data");
+        window.location.href = "/kelas";
+      } catch (error) {
+        console.log(error.message);
+      }
+    });
+  </script>
+</html>
