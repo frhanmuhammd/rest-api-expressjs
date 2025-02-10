@@ -6,7 +6,11 @@ import sequelize from "./src/config/database.js";
 const app = express();
 
 app.use(bodyParser.json());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 app.use(cookieParser());
 app.set("view engine", "ejs");
 
@@ -21,6 +25,7 @@ sequelize
 
 import kelasRoutes from "./src/routes/kelas.routes.js";
 import profilePenggunaRoutes from "./src/routes/profilePengguna.routes.js";
+import { Authentication } from "./src/middleware/authentication.js";
 
 app.use("/api", kelasRoutes);
 app.use("/api", profilePenggunaRoutes);
@@ -32,33 +37,33 @@ app.listen(3000, (req, res) => {
 app.get("/", (req, res) => {
   res.send("hello world");
 });
-app.get("/kelas", (req, res) => {
+app.get("/kelas", Authentication, (req, res) => {
   res.render("kelas/index.ejs");
 });
-app.get("/kelas/create", (req, res) => {
+app.get("/kelas/create", Authentication, (req, res) => {
   res.render("kelas/create.ejs");
 });
-app.get("/kelas/edit", (req, res) => {
+app.get("/kelas/edit", Authentication, (req, res) => {
   res.render("kelas/edit.ejs");
 });
-app.get("/profile-pengguna", (req, res) => {
+app.get("/profile-pengguna", Authentication, (req, res) => {
   res.render("profile-pengguna/index.ejs");
 });
-app.get("/profile-pengguna/create", (req, res) => {
+app.get("/profile-pengguna/create", Authentication, (req, res) => {
   res.render("profile-pengguna/create.ejs");
 });
-app.get("/profile-pengguna/edit", (req, res) => {
+app.get("/profile-pengguna/edit", Authentication, (req, res) => {
   res.render("profile-pengguna/edit.ejs");
 });
 app.get("/login", (req, res) => {
   res.render("auth/login.ejs");
 });
 
-app.post("/api/logout", (req, res) => {
+app.get("/logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: false,
     secure: false,
   });
 
-  return res.status(200).json({ message: "Logout berhasil" });
+  return res.redirect("/login");
 });

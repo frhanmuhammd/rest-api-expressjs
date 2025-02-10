@@ -1,8 +1,11 @@
 export const Authentication = (req, res, next) => {
   const token = req.cookies.token;
 
+  console.log("Token:", token);
+
   if (!token) {
-    return res.status(401).json({ message: "Not Authorization" });
+    console.log("Token tidak ada, mengarahkan ke /login");
+    return res.redirect("/login");
   }
 
   next();
