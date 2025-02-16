@@ -6,7 +6,7 @@ export const getAll = async (req, res) => {
 
     return res.status(200).json({ message: "berhasil mendapatkan kelas data", data: result });
   } catch (error) {
-    return res.status(500).json({ message: "gagal mendapatkan kelas", data: null });
+    return res.status(500).json({ message: "gagal mendapatkan kelas data", data: null });
   }
 };
 
