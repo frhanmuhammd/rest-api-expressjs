@@ -4,7 +4,7 @@ export const getAll = async (req, res) => {
   try {
     const result = await kelasModel.findAll();
 
-    return res.status(200).json({ message: "berhasil mendapatkan kelas", data: result });
+    return res.status(200).json({ message: "berhasil mendapatkan kelas data", data: result });
   } catch (error) {
     return res.status(500).json({ message: "gagal mendapatkan kelas", data: null });
   }
